@@ -11,14 +11,12 @@ function getRepoContributors(repoOwner, repoName, cb) {
         url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
         headers: {
             'User-Agent': 'request',
-            'Authorization': "token " + secrets
+            'Authorization': "token " + secretsif
         }
     };
     request(options, function(err, res, body) {
         cb(err, body);
-
     })
-
 }
 
 getRepoContributors("jquery", "jquery", function(err, result) {
@@ -27,9 +25,6 @@ getRepoContributors("jquery", "jquery", function(err, result) {
     for (let people of temp) {
         downloadImageByURL(people.login, people.avatar_url, "./avatars/")
     }
-    // temp.forEach(function(element) {
-    //     // console.log(element.avatar_url);
-
 });
 
 function downloadImageByURL(name, url, filePath) {
@@ -43,5 +38,14 @@ function downloadImageByURL(name, url, filePath) {
         })
 
         .pipe(fs.createWriteStream(filePath + name + '.jpg'))
-
 }
+var repoOwner = process.argv[2];
+var repoName = process.argv[3];
+
+getRepoContributors(repoOwner, repoName, function(error, data) {
+    if (error) {
+        console.log("say my name, say my name");
+    } else {
+        console.log("Say what up to " + repoOwner + repoName + "!")
+    }
+})
